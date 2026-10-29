@@ -1,0 +1,14 @@
+{
+  "name": "threefps",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Browser FPS prototype built from the Three.js games_fps example",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-server.js",
+    "start": "node scripts/dev-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

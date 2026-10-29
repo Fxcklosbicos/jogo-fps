@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Containment - Menu Principal</title>
+    <link rel="stylesheet" href="./src/styles/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Tela de Menu Principal */
+        #main-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        .menu-container {
+            text-align: center;
+            max-width: 700px;
+            width: 90%;
+        }
+
+        .menu-title {
+            font-size: 3rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .menu-subtitle {
+            font-size: 1rem;
+            color: #888;
+            letter-spacing: 2px;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 16px 32px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 16px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.25s ease;
+            transform: skew(-5deg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+        }
+
+        .menu-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+            transform: skew(-5deg) translateY(-2px);
+        }
+
+        /* Seletor de Mapas */
+        .map-selector {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .map-option {
+            background: rgba(30, 30, 30, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 16px;
+            color: #fff;
+            font-weight: 900;
+            font-style: italic;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .map-option.selected {
+            border-color: #00ff66;
+            background: rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+
+        .map-option:hover {
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Ícone da Porta (Aparece ao atingir 6 rounds) */
+        #door-portal {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #00ff66;
+            color: #00ff66;
+            padding: 12px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+            animation: pulseDoor 1.5s infinite;
+        }
+
+        @keyframes pulseDoor {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(0, 255, 102, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MENU PRINCIPAL -->
+    <div id="main-menu">
+        <div class="menu-container">
+            <h1 class="menu-title">Containment</h1>
+            <p class="menu-subtitle">Survival FPS Experience</p>
+
+            <div class="menu-options" id="main-menu-options">
+                <button class="menu-btn" id="btn-start">Iniciar Jogo</button>
+                <button class="menu-btn" id="btn-maps">Selecionar Mapa</button>
+            </div>
+
+            <!-- Painel de Seleção de Mapas -->
+            <div class="map-selector" id="map-selector-panel">
+                <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 10px;">Escolha o Mapa:</p>
+                <div class="map-grid">
+                    <button class="map-option selected" data-map="Desert">Desert</button>
+                    <button class="map-option" data-map="fpstp.map">fpstp.map</button>
+                    <button class="map-option" data-map="Maze.0">Maze.0</button>
+                    <button class="map-option" data-map="Nature">Nature</button>
+                    <button class="map-option" data-map="soviet">soviet</button>
+                    <button class="map-option" data-map="Street City">Street City</button>
+                </div>
+                <button class="menu-btn" id="btn-back-menu" style="margin-top: 15px;">Voltar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÍCONE DE PORTA (Aparece aos 6 rounds para avançar de fase/mapa) -->
+    <button id="door-portal" title="Avançar para a próxima fase">
+        🚪 Avançar Fase (Mapa Seguinte)
+    </button>
+
+    <div id="app">
+        <div id="viewport" class="viewport"></div>
+
+        <div id="hud" class="hud">
+            <div class="hud__panel">
+                <p class="hud__eyebrow">threefps / survival prototype</p>
+                <h1 class="hud__title">Containment</h1>
+                <p id="hud-status" class="hud__status">Loading collision world...</p>
+                <button id="lock-button" class="hud__button" type="button" disabled>
+                    Enter Simulation
+                </button>
+                <div class="hud__tips">
+                    <span>`WASD` move</span>
+                    <span>`SPACE` jump</span>
+                    <span>mouse look</span>
+                    <span>left click fire</span>
+                    <span>`R` reload</span>
+                    <span>`1` / `2` / `3` / `4` swap</span>
+                </div>
+            </div>
+
+            <div class="ammo">
+                <div class="ammo__header">
+                    <span id="ammo-weapon" class="ammo__label">Carbine</span>
+                    <span id="ammo-state" class="ammo__state"></span>
+                </div>
+                <div class="ammo__counts">
+                    <span id="ammo-current" class="ammo__current">00</span>
+                    <span class="ammo__divider">/</span>
+                    <span id="ammo-reserve" class="ammo__reserve">00</span>
+                </div>
+                <div class="ammo__slots" aria-label="Weapons">
+                    <button class="weapon-slot" data-weapon-slot="Digit1" type="button">
+                        <span class="weapon-slot__index">1</span>
+                        <span class="weapon-slot__label">AK</span>
+                    </button>
+                    <button class="weapon-slot" data-weapon-slot="Digit2" type="button">
+                        <span class="weapon-slot__index">2</span>
+                        <span class="weapon-slot__label">SMG</span>
+                    </button>
+                    <button class="weapon-slot" data-weapon-slot="Digit3" type="button">
+                        <span class="weapon-slot__index">3</span>
+                        <span class="weapon-slot__label">HG</span>
+                    </button>
+                    <button class="weapon-slot" data-weapon-slot="Digit4" type="button">
+                        <span class="weapon-slot__index">4</span>
+                        <span class="weapon-slot__label">KN</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="survival">
+                <div class="survival__header">
+                    <p class="survival__heading">Run Status</p>
+                    <p id="survival-status" class="survival__status">Intermission</p>
+                </div>
+                <div class="survival__stat">
+                    <span class="survival__label">Wave</span>
+                    <span id="survival-wave" class="survival__value">0</span>
+                </div>
+                <div class="survival__stat">
+                    <span class="survival__label">Health</span>
+                    <span id="survival-health" class="survival__value">100</span>
+                </div>
+                <div class="survival__stat">
+                    <span class="survival__label">Kills</span>
+                    <span id="survival-kills" class="survival__value">0</span>
+                </div>
+                <div class="survival__stat">
+                    <span class="survival__label">Alive</span>
+                    <span id="survival-alive" class="survival__value">0</span>
+                </div>
+                <div class="health-meter" aria-label="Health">
+                    <div class="health-meter__bar">
+                        <div id="health-meter-fill" class="health-meter__fill"></div>
+                    </div>
+                    <div class="health-meter__labels">
+                        <span class="health-meter__label">Vitals</span>
+                        <span id="health-meter-value" class="health-meter__value">100 HP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="damage-vignette" class="damage-vignette" aria-hidden="true"></div>
+            <div id="wave-banner" class="wave-banner" aria-live="polite" aria-atomic="true">
+                Wave 1
+            </div>
+            <div id="death-overlay" class="death-overlay" aria-hidden="true">
+                <p class="death-overlay__eyebrow">Run Over</p>
+                <h2 class="death-overlay__title">Overrun</h2>
+                <p id="death-overlay-summary" class="death-overlay__summary">
+                    Restart to try another run.
+                </p>
+                <div class="death-overlay__stats" aria-label="Run Summary">
+                    <div class="death-overlay__stat">
+                        <span class="death-overlay__stat-label">Highest Wave</span>
+                        <span id="death-wave" class="death-overlay__stat-value">0</span>
+                    </div>
+                    <div class="death-overlay__stat">
+                        <span class="death-overlay__stat-label">Kills</span>
+                        <span id="death-kills" class="death-overlay__stat-value">0</span>
+                    </div>
+                    <div class="death-overlay__stat">
+                        <span class="death-overlay__stat-label">Accuracy</span>
+                        <span id="death-accuracy" class="death-overlay__stat-value">0%</span>
+                    </div>
+                    <div class="death-overlay__stat">
+                        <span class="death-overlay__stat-label">Best Weapon</span>
+                        <span id="death-best-weapon" class="death-overlay__stat-value">AK</span>
+                    </div>
+                </div>
+                <button
+                    id="death-restart-button"
+                    class="hud__button death-overlay__button"
+                    type="button"
+                >
+                    Play Again
+                </button>
+            </div>
+
+            <div class="crosshair" aria-hidden="true"></div>
+            <div id="hit-marker" class="hit-marker" aria-hidden="true"></div>
+
+            <div id="mobile-controls" class="mobile-controls" aria-hidden="true">
+                <div class="mobile-controls__left">
+                    <div id="move-pad" class="touchpad touchpad--move">
+                        <div id="move-stick" class="touchpad__stick"></div>
+                    </div>
+                </div>
+
+                <div class="mobile-controls__right">
+                    <div id="look-pad" class="lookpad">
+                        <span class="lookpad__label">LOOK</span>
+                    </div>
+
+                    <div class="mobile-actions">
+                        <button id="mobile-reload" class="mobile-button mobile-button--aux" type="button">R</button>
+                        <button id="mobile-jump" class="mobile-button mobile-button--aux" type="button">Jump</button>
+                        <button id="mobile-fire" class="mobile-button mobile-button--fire" type="button">Fire</button>
+                    </div>
+
+                    <div class="mobile-weapons">
+                        <button class="mobile-weapon" data-weapon-slot="Digit1" type="button">1</button>
+                        <button class="mobile-weapon" data-weapon-slot="Digit2" type="button">2</button>
+                        <button class="mobile-weapon" data-weapon-slot="Digit3" type="button">3</button>
+                        <button class="mobile-weapon" data-weapon-slot="Digit4" type="button">4</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./build/three.module.js",
+          "three/addons/": "./examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="./src/main.js"></script>
+
+    <!-- Script de Controle do Menu, Seleção dos Mapas e Avanço no 6º Round -->
+    <script>
+        const mapsList = ['Desert', 'fpstp.map', 'Maze.0', 'Nature', 'soviet', 'Street City'];
+        let selectedMap = localStorage.getItem('selected_game_map') || 'Desert';
+
+        const mainMenu = document.getElementById('main-menu');
+        const btnStart = document.getElementById('btn-start');
+        const btnMaps = document.getElementById('btn-maps');
+        const mainMenuOptions = document.getElementById('main-menu-options');
+        const mapSelectorPanel = document.getElementById('map-selector-panel');
+        const btnBackMenu = document.getElementById('btn-back-menu');
+        const doorPortal = document.getElementById('door-portal');
+
+        // Atualiza estilo do botão selecionado
+        function updateMapSelectionUI() {
+            document.querySelectorAll('.map-option').forEach(opt => {
+                if (opt.getAttribute('data-map') === selectedMap) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+        }
+        updateMapSelectionUI();
+
+        // Navegação no Menu
+        btnMaps.addEventListener('click', () => {
+            mainMenuOptions.style.display = 'none';
+            mapSelectorPanel.style.display = 'flex';
+        });
+
+        btnBackMenu.addEventListener('click', () => {
+            mapSelectorPanel.style.display = 'none';
+            mainMenuOptions.style.display = 'flex';
+        });
+
+        // Clique no mapa
+        document.querySelectorAll('.map-option').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                selectedMap = e.target.getAttribute('data-map');
+                localStorage.setItem('selected_game_map', selectedMap);
+                updateMapSelectionUI();
+            });
+        });
+
+        // Iniciar o jogo
+        btnStart.addEventListener('click', () => {
+            mainMenu.style.opacity = '0';
+            setTimeout(() => {
+                mainMenu.style.display = 'none';
+            }, 300);
+
+            const lockButton = document.getElementById('lock-button');
+            if (lockButton) {
+                lockButton.click();
+            }
+        });
+
+        // Monitorar 6 rounds
+        const observer = new MutationObserver(() => {
+            const waveElement = document.getElementById('survival-wave');
+            if (waveElement) {
+                const currentWave = parseInt(waveElement.innerText) || 0;
+                if (currentWave >= 6 && currentWave % 6 === 0) {
+                    doorPortal.style.display = 'flex';
+                } else {
+                    doorPortal.style.display = 'none';
+                }
+            }
+        });
+
+        const survivalWaveNode = document.getElementById('survival-wave');
+        if (survivalWaveNode) {
+            observer.observe(survivalWaveNode, { childList: true, characterData: true, subtree: true });
+        }
+
+        // Avançar para próximo mapa ao clicar na porta
+        doorPortal.addEventListener('click', () => {
+            const currentIndex = mapsList.indexOf(selectedMap);
+            const nextIndex = (currentIndex + 1) % mapsList.length;
+            const nextMap = mapsList[nextIndex];
+            
+            localStorage.setItem('selected_game_map', nextMap);
+            alert(`Fase 6 concluída! Avançando para o próximo mapa: ${nextMap}`);
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
